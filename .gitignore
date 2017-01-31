@@ -1,2 +1,6 @@
 # Dependency directories
 node_modules
+
+.tscache
+.baseDir.ts
+dist
