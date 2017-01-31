@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var vrVisRoutes = require('./routes/VrVisRoutes');
-
+global.Promise = require("q").Promise;
 mongoose.Promise = global.Promise;
 
 // connect to MongoDB
