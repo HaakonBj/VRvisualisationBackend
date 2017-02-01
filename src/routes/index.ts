@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { 
@@ -13,11 +15,13 @@ router.get('/', function(req, res, next) {
 //TODO: sanitize input
 router.post('/', function (req, res) {
   console.log(req.body.gitUrl);
-  /*  res.render('index',{
+    res.render('index',{
+      title: "VR Visualisation of Git",
+      gitText: "Enter git url",
       success: "success, repo url recieved:",
       repo: req.body.gitUrl
     });
-  */
+  
     //TODO retrieve data from git using this url
     
   });

@@ -13,5 +13,10 @@
     </form>
     <button type="submit" form="gitRepoUrl" value="Submit">Submit</button>
 
+    <% if (typeof success != 'undefined') { %> 
+      <p><%= success %> <%= repo %></p>
+    <% } %>
+
+
   </body>
 </html>
