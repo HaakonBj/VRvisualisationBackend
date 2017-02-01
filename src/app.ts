@@ -12,7 +12,6 @@ global.Promise = require("q").Promise;
 mongoose.Promise = global.Promise;
 
 // connect to MongoDB
-//TODO: Change:
 mongoose.connect('mongodb://localhost/VrVisualisation')
   .then(() =>  console.log('connection succesful'))
   .catch((err) => console.error(err));
@@ -27,11 +26,11 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.use(index);
 app.use('/VrVis', vrVisRoutes);
 
 // catch 404 and forward to error handler

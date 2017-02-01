@@ -7,5 +7,11 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
+    <form action="/" method="post" id="gitRepoUrl">
+      <%= gitText %> <input type="text" name="gitUrl"><br>
+    </form>
+    <button type="submit" form="gitRepoUrl" value="Submit">Submit</button>
+
   </body>
 </html>
