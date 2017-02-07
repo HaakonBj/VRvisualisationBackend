@@ -21,24 +21,28 @@ router.post('/', function (req, res) {
       repo: req.body.gitUrl
     });
 
-  var localPath = require("path").join(__dirname, "../localRepo");
-   
-   
-  var repo = git.Clone.clone(req.body.gitUrl, localPath);
+  const localPath: string = require("path").join(__dirname, "../localRepo");
 
-    //TODO clone data, output cloning
-    //open, retrieve the data
-    //console log out the data, to see what information is available.
-  var errorAndAttemptOpen = function() {
-    return git.Repository.open(localPath);
-  };
-  
-  repo.catch(errorAndAttemptOpen)
-  .then(function(repository) {
-    // Access any repository methods here.
-    console.log("Is the repository bare? %s", Boolean(repository.isBare()));
+  //Get the repository, either open existing or clone it.
+  let repo: any  = git.Repository.open(localPath).catch(function(e){
+    console.log("Error: " + e);
+    console.log("Cloning repo instead");
+    return git.Clone.clone(req.body.gitUrl, localPath).then(function(repo){
+      console.log("cloned the repo");
+    })    
   });
-
+  //TODO remove:
+  repo.then(function(repo){
+    repo.getHeadCommit().then(function(commit){
+      //console.log("This did work: \n" + commit);
+      console.log(commit.author() + " " + commit.sha());
+      commit.getParents().then(function(commits){
+        commits.forEach(commit => {
+          console.log(commit.sha());
+        });
+      });
+    });
+  })
 });
 
 module.exports = router;
