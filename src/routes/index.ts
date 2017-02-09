@@ -32,16 +32,34 @@ router.post('/', function (req, res) {
     })    
   });
   //TODO remove:
+  //console.log("About to do the thing!");
   repo.then(function(repo){
+    //console.log("So close");
     repo.getHeadCommit().then(function(commit){
-      //console.log("This did work: \n" + commit);
-      console.log(commit.author() + " " + commit.sha());
-      commit.getParents().then(function(commits){
-        commits.forEach(commit => {
-          console.log(commit.sha());
-        });
+      //console.log("Inside the thing: \n");
+      var eventEmitter = commit.history();
+      //console.log("Ran the thing");
+      eventEmitter.on('commit', function(commit){
+        console.log(commit.sha() + "\n");
       });
-    });
+      
+      eventEmitter.on('end',function(commits){
+        console.log("end event fired \n");
+      });
+
+      eventEmitter.on('error', function(error){
+        console.log("eventEmitter failed");
+      });
+      eventEmitter.start();
+      //console.log("This did work: \n" + commit);
+     // console.log(commit.author() + " " + commit.sha());
+      //commit.getParents().then(function(commits){
+       // commits.forEach(commit => {
+       //   console.log(commit.sha());
+       // });
+      //});
+    //});
+  });
   })
 });
 
