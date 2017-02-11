@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var git = require('nodegit');
+var repository = require('../helpers/repository')
 var path = require('path');
 
 // GET home page
@@ -21,35 +21,7 @@ router.post('/', function (req, res) {
     success: "success, repo url recieved:",
     repo: req.body.gitUrl
   });
+  repository.initRepo(req.body.gitUrl);
 
-  const localPath: string = require("path").join(__dirname, "../localRepo");
-
-  //Get the repository, either open existing or clone it.
-  let repo: any = git.Repository.open(localPath).catch(function (e) {
-    console.log("Error: " + e);
-    console.log("Cloning repo instead");
-    return git.Clone.clone(req.body.gitUrl, localPath).then(function (repo) {
-      console.log("cloned the repo");
-    })
-  });
-  //TODO remove:
-  repo.then(function (repo) {
-    repo.getHeadCommit().then(function (commit) {
-      var eventEmitter = commit.history();
-      eventEmitter.on('commit', function (commit) {
-        console.log(commit.sha() + "\n");
-      });
-
-      eventEmitter.on('end', function (commits) {
-        console.log("end event fired \n");
-      });
-
-      eventEmitter.on('error', function (error) {
-        console.log("eventEmitter failed");
-      });
-      eventEmitter.start();
-    });
-  })
 });
-
 module.exports = router;
