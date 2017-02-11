@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var vrVisualisationBackend = require('../models/VrVisualisationBackend');
 
 // GET /vrVis listing. 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   vrVisualisationBackend.find(function (err, todos) {
     if (err) return next(err);
     res.json(todos);
@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 // GET /vrVis/id 
-router.get('/:id', function(req, res, next) {
+router.get('/:id', function (req, res, next) {
   vrVisualisationBackend.findById(req.params.id, function (err, post) {
     if (err) return next(err);
     res.json(post);
@@ -21,7 +21,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 // POST /vrVis 
-router.post('/', function(req, res, next) {
+router.post('/', function (req, res, next) {
   vrVisualisationBackend.create(req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
 });
 
 // PUT /vrVis/:id 
-router.put('/:id', function(req, res, next) {
+router.put('/:id', function (req, res, next) {
   vrVisualisationBackend.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
@@ -37,7 +37,7 @@ router.put('/:id', function(req, res, next) {
 });
 
 // DELETE /vrVis/:id 
-router.delete('/:id', function(req, res, next) {
+router.delete('/:id', function (req, res, next) {
   vrVisualisationBackend.findByIdAndRemove(req.params.id, req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
