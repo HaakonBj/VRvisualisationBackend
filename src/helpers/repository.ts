@@ -1,5 +1,5 @@
 var git = require('nodegit');
-
+var gitHistory = require('../models/GitHistoryModel');
 const localPath: string = require("path").join(__dirname, "../localRepo");
 
 //get the repo or clone it.
@@ -27,18 +27,25 @@ let saveTest: (repo: any) => void =
 
       //Handle commit
       eventEmitter.on('commit', function (commit) {
-        console.log(commit.sha() + "\n");
+
       });
 
       //Finished
       eventEmitter.on('end', function (commits) {
-        console.log("end event fired \n");
+       console.log("end event fired \n");
+        commits.forEach(commit => {
+          let commitToBeAdded = new gitHistory({
+            _id: commit.sha(),
+            author: commit.author(),
+            commitDate: commit.date()
+          });
+          commitToBeAdded.save();
+        });
       });
 
       //Error
       eventEmitter.on('error', function (error) {
-        console.log("eventEmitter failed");
-        return false;
+        console.log("eventEmitter failed" + error);
       });
 
       eventEmitter.start();
