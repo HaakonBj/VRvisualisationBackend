@@ -1,14 +1,19 @@
 var mongoose = require('mongoose');
 
-var gitHistorySchema = new mongoose.Schema({
-  _id: String,
+var ParentOrChildSchema = new mongoose.Schema({
+  _id: Number,
+  sha: String
+});
+
+//todo rename to commitSchema
+var GitHistorySchema = new mongoose.Schema({
+  _id: Number,
+  sha: String,
   author: String,
   commitDate: Date,
-  parentSha1: String,
-  parentSha2: String,
-  childSha1: String,
-  childSha2: String,
+  parents: [ParentOrChildSchema]
 }, {
-    strict: "throw"
+    strict: "false"
   });
-module.exports = mongoose.model('gitHistory', gitHistorySchema);
+
+module.exports = mongoose.model('gitHistory', GitHistorySchema);
