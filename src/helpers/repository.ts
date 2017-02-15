@@ -1,7 +1,6 @@
 var git = require('nodegit');
 var mongoose = require('mongoose');
 var gitHistory = require('../models/GitHistoryModel');
-let JsonHelper = require('./jsonHelper');
 const localPath: string = require("path").join(__dirname, "../localRepo");
 
 //get the repo or clone it.
@@ -42,7 +41,9 @@ let saveAllCommitsData: (repo: any) => void =
         }
         //Save the data in the db
         commitToBeAdded.save(function(e){
-          console.log("Something went wrong when saving to the db: " + e);
+          if(e){
+            console.log("Something went wrong when saving to the db: " + e);
+          }
         });
       });
 
