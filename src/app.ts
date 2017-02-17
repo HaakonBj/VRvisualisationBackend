@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var vrVisRoutes = require('./routes/VrVisRoutes');
+var gitHistoryRoutes = require('./routes/UnrealRoutes');
 global.Promise = require("q").Promise;
 mongoose.Promise = global.Promise;
 
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(index);
 app.use('/VrVis', vrVisRoutes);
+app.use('/GitHistory', gitHistoryRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
