@@ -30,9 +30,10 @@ let saveAllCommitsData: (repo: any) => void =
       //Handle commit
       eventEmitter.on('commit', function (commit) {
         let parents: string[] = commit.parents();
+        //Use author().email() if you want the email too
         let commitToBeAdded = new gitHistory({
           sha: commit.sha(),
-          author: commit.author(),
+          author: commit.author().name(),
           commitDate: commit.date()
         });
         //Add all the parents sha:
