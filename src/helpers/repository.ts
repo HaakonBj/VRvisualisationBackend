@@ -20,45 +20,73 @@ let initRepo: (gitUrl: string) => void =
           })
       });
   }
-//TODO: change sha from being key
 //TODO: figure out the order the commits are added
 let saveAllCommitsData: (repo: any) => void =
   function (repo: any): void {
     repo.getHeadCommit().then(function (commit) {
-      var eventEmitter = commit.history();
 
-      //Handle commit
-      eventEmitter.on('commit', function (commit) {
-        let parents: string[] = commit.parents();
-        //Use author().email() if you want the email too
-        let commitToBeAdded = new gitHistory({
-          sha: commit.sha(),
-          author: commit.author().name(),
-          commitDate: commit.date()
-        });
-        //Add all the parents sha:
-        for (let parent of parents) {
-          commitToBeAdded.parents.push({ sha: parent });
+      let revwalk: any = git.Revwalk.create(repo);
+      revwalk.sorting(git.Revwalk.SORT.TOPOLOGICAL);
+      let oId: string = commit.id();
+      
+      let CommitTemp: any = revwalk.walk(oId, function (err, commit) {
+        if (err) {
+          console.log("objOne: " + err);
         }
-        //Save the data in the db
-        commitToBeAdded.save(function(e){
-          if(e){
-            console.log("Something went wrong when saving to the db: " + e);
+        if (commit) {
+          let parents: string[] = commit.parents();
+          //Use author().email() if you want the email too
+          let commitToBeAdded = new gitHistory({
+            sha: commit.sha(),
+            author: commit.author().name(),
+            commitDate: commit.date()
+          });
+          //Add all the parents sha:
+          for (let parent of parents) {
+            commitToBeAdded.parents.push({ sha: parent });
           }
-        });
+          //Save the data in the db
+          commitToBeAdded.save(function (e) {
+            if (e) {
+              console.log("Something went wrong when saving to the db: " + e);
+            }
+          });
+        }
       });
+      // var eventEmitter = commit.history();
 
-      //Finished
-      eventEmitter.on('end', function (commits) {
-        //console.log("end event fired \n");
-      });
+      // //Handle commit
+      // eventEmitter.on('commit', function (commit) {
+      //   let parents: string[] = commit.parents();
+      //   //Use author().email() if you want the email too
+      //   let commitToBeAdded = new gitHistory({
+      //     sha: commit.sha(),
+      //     author: commit.author().name(),
+      //     commitDate: commit.date()
+      //   });
+      //   //Add all the parents sha:
+      //   for (let parent of parents) {
+      //     commitToBeAdded.parents.push({ sha: parent });
+      //   }
+      //   //Save the data in the db
+      //   commitToBeAdded.save(function(e){
+      //     if(e){
+      //       console.log("Something went wrong when saving to the db: " + e);
+      //     }
+      //   });
+      //   });
 
-      //Error
-      eventEmitter.on('error', function (error) {
-        console.log("eventEmitter failed" + error);
-      });
+      //   //Finished
+      //   eventEmitter.on('end', function (commits) {
+      //     //console.log("end event fired \n");
+      //   });
 
-      eventEmitter.start();
+      //   //Error
+      //   eventEmitter.on('error', function (error) {
+      //     console.log("eventEmitter failed" + error);
+      //   });
+
+      //   eventEmitter.start();
     });
   }
 
