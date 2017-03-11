@@ -20,11 +20,11 @@ let initRepo: (gitUrl: string) => void =
           })
       });
   }
-//TODO: figure out the order the commits are added
+//Save the commits to mongodb
 let saveAllCommitsData: (repo: any) => void =
   function (repo: any): void {
     repo.getHeadCommit().then(function (commit) {
-
+      let id: number = 0;
       let revwalk: any = git.Revwalk.create(repo);
       revwalk.sorting(git.Revwalk.SORT.TOPOLOGICAL);
       let oId: string = commit.id();
@@ -37,6 +37,7 @@ let saveAllCommitsData: (repo: any) => void =
           let parents: string[] = commit.parents();
           //Use author().email() if you want the email too
           let commitToBeAdded = new gitHistory({
+            _id: id++,
             sha: commit.sha(),
             author: commit.author().name(),
             commitDate: commit.date()
@@ -45,6 +46,7 @@ let saveAllCommitsData: (repo: any) => void =
           for (let parent of parents) {
             commitToBeAdded.parents.push({ sha: parent });
           }
+          //TODO: save returns promise!!!! Fix
           //Save the data in the db
           commitToBeAdded.save(function (e) {
             if (e) {
